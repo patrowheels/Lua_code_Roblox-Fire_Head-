@@ -1,0 +1,26 @@
+local Players = game:GetService("Players")
+
+local function onCharacterAdded(character)
+	-- Give them fire on their head if they don't have them yet
+	if not character:FindFirstChild("Fire") then
+		local fire = Instance.new("Fire")
+		fire.Parent = character:WaitForChild("Head")
+	end
+end
+
+local function onPlayerAdded(player)
+	-- Check if they already spawned in
+	if player.Character then
+		onCharacterAdded(player.Character)
+	end
+	-- Listen for the player (re)spawning 
+	player.CharacterAdded:Connect(onCharacterAdded)
+end
+
+-- Iterate over each player already connected
+-- to the game using a generic for-loop
+for i, player in pairs(Players:GetPlayers()) do
+	onPlayerAdded(player)
+end
+-- Listen for newly connected players
+Players.PlayerAdded:Connect(onPlayerAdded)
